@@ -25,6 +25,11 @@ app.get('/todos', (req, res) => {
 	});
 });
 
+app.post('/todos', (req, res) => {
+	db.insert(req.body);
+	res.end();
+});
+
 app.post('/todos/complete', (req, res) => {
 	console.log('got a request');
 	db.update(
