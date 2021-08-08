@@ -1,22 +1,20 @@
 const express = require('express');
-const serverless = require('serverless-http');
-const router = express.Router();
-
+// const serverless = require('serverless-http');
 const path = require('path');
 const cors = require('cors');
 
 const Datastore = require('nedb');
 
-const db = new Datastore('../database.db');
+const db = new Datastore('./database.db');
 db.loadDatabase();
 
 const app = express();
-router.use(cors());
-// const port = 3001;
+const port = 3001;
+app.use(cors());
 
-router.use(express.json());
+app.use(express.json());
 
-router.get('/todos', (req, res) => {
+app.get('/todos', (req, res) => {
 	console.log('got a fetch req');
 	db.find({}, (error, data) => {
 		if (error) {
@@ -27,13 +25,7 @@ router.get('/todos', (req, res) => {
 	});
 });
 
-router.post('/todos', (req, res) => {
-	console.log('got a post req');
-	db.insert(req.body);
-	res.end();
-});
-
-router.post('/todos/complete', (req, res) => {
+app.post('/todos/complete', (req, res) => {
 	console.log('got a request');
 	db.update(
 		{ id: req.body.id },
@@ -46,7 +38,7 @@ router.post('/todos/complete', (req, res) => {
 	);
 	res.end();
 });
-router.post('/todos/delete', (req, res) => {
+app.post('/todos/delete', (req, res) => {
 	console.log('got a request');
 	db.remove({ id: req.body.id }, {}, function (err, numRemoved) {
 		console.log(numRemoved);
@@ -56,10 +48,6 @@ router.post('/todos/delete', (req, res) => {
 
 db.persistence.compactDatafile();
 
-app.use('/.netlify/functions/api', router);
-
-// app.listen(port, () => {
-// 	console.log(`Listening.....`);
-// });
-
-module.exports.handler = serverless(app);
+app.listen(process.env.PORT || port, () => {
+	console.log(`Listening.....`);
+});
