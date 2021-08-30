@@ -16,6 +16,10 @@ app.use(cors());
 
 app.use(express.json());
 
+app.get('/', (req, res) => {
+	res.end('Hello, This server is Used by Puneet56 to host his apps.');
+});
+
 app.post('/todos/gettodos', (req, res) => {
 	console.log('App started, all tasks sent');
 	db.find({ email: req.body.email }, (error, data) => {
