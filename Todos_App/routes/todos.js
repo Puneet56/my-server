@@ -4,14 +4,7 @@ const bcrypt = require('bcryptjs');
 const router = express.Router();
 
 router.use(express.json());
-
-const corsOptions = {
-	origin: '*',
-	credentials: true, //access-control-allow-credentials:true
-	optionSuccessStatus: 200,
-};
-
-router.use(cors(corsOptions));
+router.use(cors());
 
 //databases import
 const Datastore = require('nedb');
